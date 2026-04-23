@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MMAPOP — Combo Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0a0a0a;
+  --dark: #111111;
+  --card: #181818;
+  --border: #2a2a2a;
+  --border-light: #333;
+  --accent: #e8ff00;
+  --accent-dim: rgba(232,255,0,0.12);
+  --text: #f0f0f0;
+  --muted: #888;
+  --punch: #4a9eff;
+  --punch-bg: rgba(74,158,255,0.12);
+  --kick: #ff7c4a;
+  --kick-bg: rgba(255,124,74,0.12);
+  --knee: #c84aff;
+  --knee-bg: rgba(200,74,255,0.12);
+  --elbow: #ff4a7c;
+  --elbow-bg: rgba(255,74,124,0.12);
+  --defense: #4affc8;
+  --defense-bg: rgba(74,255,200,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* HEADER */
+.header {
+  background: var(--dark);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.logo span { color: var(--text); }
+.header-sub { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* HERO STRIP */
+.hero-strip {
+  background: var(--dark);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 20px 0;
+}
+.hero-strip-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(36px, 8vw, 64px);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.hero-title em { color: var(--accent); font-style: normal; }
+.hero-desc { font-size: 13px; color: var(--muted); max-width: 460px; margin-bottom: 20px; line-height: 1.6; }
+.stats-row {
+  display: flex;
+  gap: 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+}
+.stat { text-align: center; }
+.stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--accent); line-height: 1; }
+.stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+
+/* RANDOM BTN */
+.random-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--black);
+  border: none;
+  border-radius: 6px;
+  padding: 9px 18px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: 0.02em;
+  margin-bottom: 20px;
+}
+.random-btn:hover { opacity: 0.88; }
+.random-btn:active { transform: scale(0.97); }
+.random-icon { font-size: 15px; }
+
+/* SEARCH & FILTERS */
+.controls {
+  background: var(--dark);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  position: sticky;
+  top: 56px;
+  z-index: 90;
+}
+.controls-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.search-box {
+  position: relative;
+}
+.search-input {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 9px 14px 9px 36px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus { border-color: var(--border-light); }
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 14px;
+  pointer-events: none;
+}
+.filter-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.filter-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.filter-btn:hover { border-color: var(--border-light); color: var(--text); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: var(--black); font-weight: 500; }
+
+/* RESULTS BAR */
+.results-bar {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 12px 20px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.results-count { font-size: 12px; color: var(--muted); }
+.results-count strong { color: var(--text); }
+
+/* COMBO LIST */
+.combo-list {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.combo-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+  cursor: pointer;
+}
+.combo-card:hover { border-color: var(--border-light); }
+.combo-card.open { border-color: var(--accent); }
+
+.combo-header {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.combo-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  color: var(--muted);
+  min-width: 32px;
+  letter-spacing: 0.04em;
+}
+.combo-card.open .combo-num { color: var(--accent); }
+.combo-info { flex: 1; min-width: 0; }
+.combo-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.combo-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+.tag-cat { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(232,255,0,0.2); }
+.tag-beg { background: rgba(74,255,200,0.1); color: var(--defense); border: 1px solid rgba(74,255,200,0.2); }
+.tag-int { background: rgba(74,158,255,0.1); color: var(--punch); border: 1px solid rgba(74,158,255,0.2); }
+.tag-adv { background: rgba(255,74,124,0.1); color: var(--elbow); border: 1px solid rgba(255,74,124,0.2); }
+.chevron {
+  color: var(--muted);
+  font-size: 12px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.combo-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
+
+.combo-body {
+  display: none;
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--border);
+  margin-top: 0;
+  padding-top: 14px;
+}
+.combo-card.open .combo-body { display: block; }
+
+.sequence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.strike {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.s-punch { background: var(--punch-bg); color: var(--punch); }
+.s-kick { background: var(--kick-bg); color: var(--kick); }
+.s-knee { background: var(--knee-bg); color: var(--knee); }
+.s-elbow { background: var(--elbow-bg); color: var(--elbow); }
+.s-defense { background: var(--defense-bg); color: var(--defense); }
+.s-other { background: rgba(255,255,255,0.06); color: var(--muted); }
+.arrow { color: var(--border-light); font-size: 10px; }
+
+.combo-note {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.combo-tip {
+  margin-top: 10px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(232,255,0,0.15);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.55;
+}
+.tip-label { color: var(--accent); font-weight: 500; }
+
+/* EMPTY */
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+.empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.4; }
+.empty-text { font-size: 14px; }
+
+/* LEGEND */
+.legend {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px 4px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+
+.filter-btn .badge-count {
+  display: inline-block;
+  background: rgba(255,255,255,0.08);
+  color: var(--muted);
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 10px;
+  margin-left: 4px;
+  font-weight: 400;
+}
+.filter-btn.active .badge-count {
+  background: rgba(0,0,0,0.2);
+  color: rgba(0,0,0,0.6);
+}
+
+/* RANDOM HIGHLIGHT */
+.combo-card.random-highlight {
+  border-color: var(--accent);
+  animation: pulse-border 0.6s ease;
+}
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 0 0 rgba(232,255,0,0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(232,255,0,0); }
+  100% { box-shadow: 0 0 0 0 rgba(232,255,0,0); }
+}
+
+/* FOOTER */
+.footer {
+  background: var(--dark);
+  border-top: 1px solid var(--border);
+  padding: 24px 20px;
+  margin-top: 20px;
+}
+.footer-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  text-align: center;
+}
+.footer-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.footer-links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.footer-link {
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.footer-link:hover { color: var(--text); }
+.footer-divider { color: var(--border-light); }
+.footer-license {
+  font-size: 10px;
+  color: var(--border-light);
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+.footer-built {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+@media (max-width: 600px) {
+  .stats-row { gap: 16px; }
+  .combo-name { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div>
+      <div class="logo">MMA<span>POP</span></div>
+    </div>
+    <div class="header-sub">Combo Library</div>
+  </div>
+</header>
+
+<div class="hero-strip">
+  <div class="hero-strip-inner">
+    <h1 class="hero-title">Master<br><em>Every</em> Combo.</h1>
+    <p class="hero-desc">Sebastian's complete striking library — Boxing, Kickboxing, Muay Thai, defensive counters, clinch work, and more. Filter, study, and drill.</p>
+    <button class="random-btn" onclick="randomCombo()">
+      <span class="random-icon">&#9684;</span> Random Combo
+    </button>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num" id="total-count">0</div><div class="stat-label">Combos</div></div>
+      <div class="stat"><div class="stat-num" id="cat-count">0</div><div class="stat-label">Categories</div></div>
+      <div class="stat"><div class="stat-num" id="adv-count">0</div><div class="stat-label">Advanced</div></div>
+      <div class="stat"><div class="stat-num">8</div><div class="stat-label">Limbs</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="controls-inner">
+    <div class="search-box">
+      <span class="search-icon">&#9906;</span>
+      <input class="search-input" type="text" id="search" placeholder="Search combos, strikes, techniques..." autocomplete="off" />
+    </div>
+    <div class="filter-row" id="cat-filters">
+      <button class="filter-btn active" data-group="cat" data-val="all">All</button>
+      <button class="filter-btn" data-group="cat" data-val="Boxing">Boxing</button>
+      <button class="filter-btn" data-group="cat" data-val="Kickboxing">Kickboxing</button>
+      <button class="filter-btn" data-group="cat" data-val="Muay Thai">Muay Thai</button>
+      <button class="filter-btn" data-group="cat" data-val="Defense">Defense</button>
+      <button class="filter-btn" data-group="cat" data-val="Clinch">Clinch</button>
+      <button class="filter-btn" data-group="cat" data-val="Flow">Flow</button>
+      <button class="filter-btn" data-group="cat" data-val="Southpaw">Southpaw</button>
+    </div>
+    <div class="filter-row" id="level-filters">
+      <button class="filter-btn active" data-group="level" data-val="all">All Levels</button>
+      <button class="filter-btn" data-group="level" data-val="Beginner">Beginner</button>
+      <button class="filter-btn" data-group="level" data-val="Intermediate">Intermediate</button>
+      <button class="filter-btn" data-group="level" data-val="Advanced">Advanced</button>
+      <button class="filter-btn" data-group="level" data-val="Class">Class Round</button>
+    </div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div>Punch</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7c4a"></div>Kick</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#c84aff"></div>Knee</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff4a7c"></div>Elbow</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#4affc8"></div>Defense</div>
+</div>
+
+<div class="results-bar">
+  <div class="results-count" id="results-count"></div>
+</div>
+
+<div class="combo-list" id="combo-list"></div>
+
+<script>
+const COMBOS = [
+  // ===== BOXING =====
+  {id:"B1",cat:"Boxing",level:"Beginner",name:"Jab – Cross",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"}],tip:"The foundation of everything. Drive off the back foot on the cross."},
+  {id:"B2",cat:"Boxing",level:"Beginner",name:"Double Jab – Cross",seq:[{t:"Jab",c:"punch"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"}],tip:"First jab probes distance, second sets up the power cross."},
+  {id:"B3",cat:"Boxing",level:"Beginner",name:"Jab – Cross – Lead Hook",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"}],tip:"Classic 1-2-3. Rotate fully on the hook — it lands as your weight shifts back to center."},
+  {id:"B4",cat:"Boxing",level:"Beginner",name:"Jab – Cross – Hook – Cross",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Cross",c:"punch"}],tip:"Finish with power. The final cross lands when they're dealing with the hook."},
+  {id:"B5",cat:"Boxing",level:"Intermediate",name:"Jab – Cross – Hook – Cross → Body Hook",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"},{t:"Body Hook",c:"punch"}],tip:"Head shots first, finish to the body. Change levels smoothly."},
+  {id:"B6",cat:"Boxing",level:"Intermediate",name:"Jab – Cross – Body Hook",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Body Hook",c:"punch"}],tip:"Bend at the knees on the body hook, don't just drop your arm."},
+  {id:"B7",cat:"Boxing",level:"Intermediate",name:"Jab – Rear Uppercut",seq:[{t:"Jab",c:"punch"},{t:"Rear Uppercut",c:"punch"}],tip:"Use the jab to close distance, drive the uppercut upward from the hip."},
+  {id:"B8",cat:"Boxing",level:"Intermediate",name:"Jab – Rear Uppercut – Body Hook",seq:[{t:"Jab",c:"punch"},{t:"Rear Uppercut",c:"punch"},{t:"Body Hook",c:"punch"}],tip:"Great inside combo. Keep it tight and compact."},
+  {id:"B9",cat:"Boxing",level:"Intermediate",name:"1-2-1-2 → Power Cross",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Power Cross",c:"punch"}],tip:"First four punches set the rhythm, fifth one is the finisher."},
+  {id:"B10",cat:"Boxing",level:"Intermediate",name:"Jab – Cross – Lead Hook → Slip → Hook",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Slip",c:"defense"},{t:"Hook",c:"punch"}],tip:"Slip the counter cross after your hook, then fire right back."},
+  {id:"B11",cat:"Boxing",level:"Advanced",name:"Jab – Slip – Cross – Hook – Cross",seq:[{t:"Jab",c:"punch"},{t:"Slip",c:"defense"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"}],tip:"Slip your own jab return, then open up. Rhythm is key."},
+  {id:"B12",cat:"Boxing",level:"Advanced",name:"1-2 → Roll → Cross – Hook – Cross",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Roll",c:"defense"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"}],tip:"Roll under their counter hook, come back with the overhand."},
+  {id:"B13",cat:"Boxing",level:"Advanced",name:"Jab – Cross – Lead Uppercut – Rear Uppercut",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Uppercut",c:"punch"},{t:"Rear Uppercut",c:"punch"}],tip:"Get inside with the first two, then work the uppercuts in close."},
+  {id:"B14",cat:"Boxing",level:"Advanced",name:"Cross – Hook – Cross",seq:[{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"}],tip:"No jab entry. Throw the cross from outside their vision range."},
+  {id:"B15",cat:"Boxing",level:"Advanced",name:"Parry Jab → 1-2, Block Hook → 3-2-3-2, Uppercuts",seq:[{t:"Parry",c:"defense"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Block",c:"defense"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Uppercut",c:"punch"},{t:"Rear Uppercut",c:"punch"}],tip:"Full defensive-offensive flow. Parry, block, and counter everything."},
+
+  // ===== KICKBOXING =====
+  {id:"K1",cat:"Kickboxing",level:"Beginner",name:"Jab – Cross → Lead Round Kick",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Round Kick",c:"kick"}],tip:"Hands set up the kick. Step the cross and pivot into the kick."},
+  {id:"K2",cat:"Kickboxing",level:"Beginner",name:"Jab – Cross – Hook → Switch Kick",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Switch Kick",c:"kick"}],tip:"The switch disguises which leg is kicking. Keep it quick and subtle."},
+  {id:"K3",cat:"Kickboxing",level:"Intermediate",name:"Jab – Cross – Hook → Rear Round Kick",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Rear Round Kick",c:"kick"}],tip:"Classic kickboxing 4-piece. Pivot off the hook to power the kick."},
+  {id:"K4",cat:"Kickboxing",level:"Intermediate",name:"Jab – Cross → Left Round Kick",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Left Round Kick",c:"kick"}],tip:"Step the cross slightly to the outside to open your hips for the kick."},
+  {id:"K5",cat:"Kickboxing",level:"Intermediate",name:"Left Push Kick → Right Round Kick",seq:[{t:"Left Push Kick",c:"kick"},{t:"Right Round Kick",c:"kick"}],tip:"Teep resets their posture, kick comes in while they recover."},
+  {id:"K6",cat:"Kickboxing",level:"Advanced",name:"Jab – Cross – Hook → Left Push Kick → Jumping Right Roundhouse",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Left Push Kick",c:"kick"},{t:"Jumping Right Roundhouse",c:"kick"}],tip:"High risk, high reward. Only throw the jumping kick when they're flat-footed."},
+  {id:"K7",cat:"Kickboxing",level:"Advanced",name:"Cross → Right Push Kick → Jumping Roundhouse",seq:[{t:"Cross",c:"punch"},{t:"Right Push Kick",c:"kick"},{t:"Jumping Roundhouse",c:"kick"}],tip:"Use the push kick to create the space needed for the jump."},
+  {id:"K8",cat:"Kickboxing",level:"Advanced",name:"1-2-3 → Right Roundhouse → Superman Punch",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Right Roundhouse",c:"kick"},{t:"Superman Punch",c:"punch"}],tip:"Fake the second kick with the Superman. They lean back, you're already there."},
+
+  // ===== MUAY THAI =====
+  {id:"M1",cat:"Muay Thai",level:"Beginner",name:"Jab → Teep → Rear Knee",seq:[{t:"Jab",c:"punch"},{t:"Teep",c:"kick"},{t:"Rear Knee",c:"knee"}],tip:"Jab breaks their guard, teep closes distance for the knee."},
+  {id:"M2",cat:"Muay Thai",level:"Beginner",name:"Jab – Cross – Lead Knee → Rear Elbow",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Knee",c:"knee"},{t:"Rear Elbow",c:"elbow"}],tip:"Stay in close after the knee. The elbow is your follow-up."},
+  {id:"M3",cat:"Muay Thai",level:"Intermediate",name:"Jab – Cross – Hook → Rear Knee → Rear Round Kick",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Rear Knee",c:"knee"},{t:"Rear Round Kick",c:"kick"}],tip:"Knee collapses their posture, kick finishes while they're recovering."},
+  {id:"M4",cat:"Muay Thai",level:"Intermediate",name:"Jab – Cross – Hook → Rear Knee → Lead Hook → Rear Round Kick",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Rear Knee",c:"knee"},{t:"Lead Hook",c:"punch"},{t:"Rear Round Kick",c:"kick"}],tip:"Long combo. Maintain rhythm and don't rush the exit."},
+  {id:"M5",cat:"Muay Thai",level:"Intermediate",name:"Jab → Lead Teep → Cross – Hook → Rear Knee → Rear Round Kick",seq:[{t:"Jab",c:"punch"},{t:"Lead Teep",c:"kick"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Rear Knee",c:"knee"},{t:"Rear Round Kick",c:"kick"}],tip:"Teep resets distance before you come back in hard."},
+  {id:"M6",cat:"Muay Thai",level:"Intermediate",name:"Jab → Rear Uppercut → Lead Hook → Rear Roundhouse → Superman Punch",seq:[{t:"Jab",c:"punch"},{t:"Rear Uppercut",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Rear Roundhouse",c:"kick"},{t:"Superman Punch",c:"punch"}],tip:"Unpredictable sequence. The Superman comes when they least expect it."},
+  {id:"M7",cat:"Muay Thai",level:"Advanced",name:"Cross – Hook → Right Knee → Jump Right Round Kick",seq:[{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Right Knee",c:"knee"},{t:"Jump Right Round Kick",c:"kick"}],tip:"Build momentum through the combo into the jumping kick."},
+  {id:"M8",cat:"Muay Thai",level:"Advanced",name:"Jab → Cross – Lead Knee → Rear Elbow → Rear Knee → Clinch",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Knee",c:"knee"},{t:"Rear Elbow",c:"elbow"},{t:"Rear Knee",c:"knee"},{t:"Clinch",c:"other"}],tip:"Full close-range sequence. Each strike sets up the next."},
+  {id:"M9",cat:"Muay Thai",level:"Advanced",name:"Jab → Overhand Right → Rear Low Kick → Rear Teep → Spinning Back Elbow",seq:[{t:"Jab",c:"punch"},{t:"Overhand Right",c:"punch"},{t:"Rear Low Kick",c:"kick"},{t:"Rear Teep",c:"kick"},{t:"Spinning Back Elbow",c:"elbow"}],tip:"Advanced combo with a spinning finish. Only attempt when you have the timing."},
+  {id:"M10",cat:"Muay Thai",level:"Intermediate",name:"Jab – Cross – Hook → Rear Knee → Rear Elbow",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Rear Knee",c:"knee"},{t:"Rear Elbow",c:"elbow"}],tip:"Classic Muay Thai finish. Knee sets up the elbow perfectly."},
+
+  // ===== DEFENSE & COUNTERS =====
+  {id:"D1",cat:"Defense",level:"Intermediate",name:"Slip Jab → Counter Cross",seq:[{t:"Slip",c:"defense"},{t:"Counter Cross",c:"punch"}],tip:"Slip to the outside, counter cross lands as they're fully extended."},
+  {id:"D2",cat:"Defense",level:"Intermediate",name:"Slip Cross → Pull Lead Hook",seq:[{t:"Slip Cross",c:"defense"},{t:"Lead Hook",c:"punch"}],tip:"Slip inside the cross, hook comes from their blind side."},
+  {id:"D3",cat:"Defense",level:"Intermediate",name:"Parry Jab → Cross – Lead Uppercut → Rear Roundhouse",seq:[{t:"Parry",c:"defense"},{t:"Cross",c:"punch"},{t:"Lead Uppercut",c:"punch"},{t:"Rear Roundhouse",c:"kick"}],tip:"Control their jab, then punish with the full counter sequence."},
+  {id:"D4",cat:"Defense",level:"Advanced",name:"Check Low Kick → Counter Rear Low Kick → Lead Hook – Cross",seq:[{t:"Check",c:"defense"},{t:"Rear Low Kick",c:"kick"},{t:"Lead Hook",c:"punch"},{t:"Cross",c:"punch"}],tip:"Catch the kick on your shin, fire back immediately. Timing is everything."},
+  {id:"D5",cat:"Defense",level:"Advanced",name:"Lean Back → Cross → Hook → Low Kick",seq:[{t:"Lean Back",c:"defense"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Low Kick",c:"kick"}],tip:"Lean back just enough to make them miss, come right back with three."},
+  {id:"D6",cat:"Defense",level:"Advanced",name:"Lean Back → Cross – Left Kick – Cross – Right Kick",seq:[{t:"Lean Back",c:"defense"},{t:"Cross",c:"punch"},{t:"Left Kick",c:"kick"},{t:"Cross",c:"punch"},{t:"Right Kick",c:"kick"}],tip:"Keep them guessing between hands and legs. Don't telegraph the kicks."},
+  {id:"D7",cat:"Defense",level:"Advanced",name:"Leg Catch → Right Kick x2 → Leg Catch → Left Kick x2",seq:[{t:"Leg Catch",c:"defense"},{t:"Right Kick",c:"kick"},{t:"Right Kick",c:"kick"},{t:"Leg Catch",c:"defense"},{t:"Left Kick",c:"kick"},{t:"Left Kick",c:"kick"}],tip:"Catch their kicks and punish with yours. Control the distance."},
+  {id:"D8",cat:"Defense",level:"Advanced",name:"Jab → Slip Cross → Rear Uppercut – Lead Hook → Rear Roundhouse → Lean Back → Counter Cross",seq:[{t:"Jab",c:"punch"},{t:"Slip",c:"defense"},{t:"Rear Uppercut",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Rear Roundhouse",c:"kick"},{t:"Lean Back",c:"defense"},{t:"Cross",c:"punch"}],tip:"Full defensive-offensive flow. One of the most complete combos in the library."},
+  {id:"D9",cat:"Defense",level:"Intermediate",name:"Bob & Weave → Lead Hook – Cross",seq:[{t:"Bob & Weave",c:"defense"},{t:"Lead Hook",c:"punch"},{t:"Cross",c:"punch"}],tip:"Come up from the bob straight into the hook. Don't pause between the defense and offense."},
+  {id:"D10",cat:"Defense",level:"Advanced",name:"Jab → Lean Back (Evade Kick) → Cross → Rear Low Kick → Lead Uppercut → Rear Teep",seq:[{t:"Jab",c:"punch"},{t:"Lean Back",c:"defense"},{t:"Cross",c:"punch"},{t:"Rear Low Kick",c:"kick"},{t:"Lead Uppercut",c:"punch"},{t:"Rear Teep",c:"kick"}],tip:"React to their kick counter with your own. Stay fluid throughout."},
+
+  // ===== CLINCH & ELBOWS =====
+  {id:"C1",cat:"Clinch",level:"Intermediate",name:"Jab – Cross → Clinch Entry → 2x Knees → Turn & Dump → Rear Elbow",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Clinch Entry",c:"other"},{t:"Knee",c:"knee"},{t:"Knee",c:"knee"},{t:"Turn & Dump",c:"other"},{t:"Rear Elbow",c:"elbow"}],tip:"Control the clinch before throwing knees. The dump creates the space for the elbow."},
+  {id:"C2",cat:"Clinch",level:"Intermediate",name:"Jab → Lead Elbow → Rear Elbow → Clinch → Sweep → Rear Knee",seq:[{t:"Jab",c:"punch"},{t:"Lead Elbow",c:"elbow"},{t:"Rear Elbow",c:"elbow"},{t:"Clinch",c:"other"},{t:"Sweep",c:"other"},{t:"Rear Knee",c:"knee"}],tip:"Enter with elbows, sweep the leg, finish with the knee on the way down."},
+  {id:"C3",cat:"Clinch",level:"Advanced",name:"Jab – Cross – Lead Hook → Duck Under → Body Lock → Rear Knee",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Duck Under",c:"defense"},{t:"Body Lock",c:"other"},{t:"Rear Knee",c:"knee"}],tip:"Duck under their hook counter and go straight to the clinch."},
+  {id:"C4",cat:"Clinch",level:"Advanced",name:"Jab → Cross → Lead Uppercut → Rear Knee → Inside Trip → Rear Elbow",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Uppercut",c:"punch"},{t:"Rear Knee",c:"knee"},{t:"Inside Trip",c:"other"},{t:"Rear Elbow",c:"elbow"}],tip:"Uppercut to get them upright, knee to double them over, trip to put them down."},
+  {id:"C5",cat:"Clinch",level:"Advanced",name:"Jab – Lead Elbow – Frame & Push → Cross – Lead Hook → Rear Knee → Side Exit",seq:[{t:"Jab",c:"punch"},{t:"Lead Elbow",c:"elbow"},{t:"Frame",c:"other"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Rear Knee",c:"knee"},{t:"Side Exit",c:"other"}],tip:"Always exit after the clinch. Don't stand there and take counters."},
+
+  // ===== FLYING KNEE =====
+  {id:"FK1",cat:"Muay Thai",level:"Advanced",name:"Cross → Knee → Push Kick → Flying Knee",seq:[{t:"Cross",c:"punch"},{t:"Knee",c:"knee"},{t:"Push Kick",c:"kick"},{t:"Flying Knee",c:"knee"}],tip:"Create space with the push kick to get the full run for the flying knee."},
+  {id:"FK2",cat:"Muay Thai",level:"Advanced",name:"Push Kick → Fake Push Kick → Flying Knee",seq:[{t:"Push Kick",c:"kick"},{t:"Fake Push Kick",c:"defense"},{t:"Flying Knee",c:"knee"}],tip:"The fake makes them retreat, flying knee meets them on the way back."},
+  {id:"FK3",cat:"Muay Thai",level:"Advanced",name:"Jab x2 → Cross → Low Kick → Flying Knee",seq:[{t:"Jab",c:"punch"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Low Kick",c:"kick"},{t:"Flying Knee",c:"knee"}],tip:"Low kick flattens their stance for the flying knee entry."},
+
+  // ===== PUSH KICK COMBOS =====
+  {id:"P1",cat:"Muay Thai",level:"Beginner",name:"Jab – Cross → Push Kick",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Push Kick",c:"kick"}],tip:"Use the push kick to reset distance after the punches."},
+  {id:"P2",cat:"Muay Thai",level:"Intermediate",name:"Jab x2 → Left Body Shot → Left Hook → Right Body Shot",seq:[{t:"Jab",c:"punch"},{t:"Jab",c:"punch"},{t:"Left Body Shot",c:"punch"},{t:"Left Hook",c:"punch"},{t:"Right Body Shot",c:"punch"}],tip:"High-low-high-low. Keep changing levels to confuse their guard."},
+  {id:"P3",cat:"Muay Thai",level:"Intermediate",name:"Jab – Cross → Left Body Shot → Left Hook → Right Elbow",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Body Shot",c:"punch"},{t:"Hook",c:"punch"},{t:"Right Elbow",c:"elbow"}],tip:"Body hook drops their elbow guard and opens the head for the elbow."},
+  {id:"P4",cat:"Muay Thai",level:"Intermediate",name:"Left Push Kick x2 → Right Push Kick",seq:[{t:"Left Push Kick",c:"kick"},{t:"Left Push Kick",c:"kick"},{t:"Right Push Kick",c:"kick"}],tip:"Double teep disrupts their rhythm before the rear push kick finishes."},
+
+  // ===== FLOW CHAINS =====
+  {id:"FL1",cat:"Flow",level:"Advanced",name:"1-2-1-2 → Slip Slip → Uppercuts → Cross → Roll",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Slip",c:"defense"},{t:"Slip",c:"defense"},{t:"Lead Uppercut",c:"punch"},{t:"Rear Uppercut",c:"punch"},{t:"Cross",c:"punch"},{t:"Roll",c:"defense"}],tip:"Continuous flow. This is padwork gold — maintain rhythm throughout."},
+  {id:"FL2",cat:"Flow",level:"Advanced",name:"Cross – Hook – Cross → 1-2-3 → Body Hook → Hook – Cross → Roll",seq:[{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Body Hook",c:"punch"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"},{t:"Roll",c:"defense"}],tip:"Long chain with a defensive exit. Breathe through the combo."},
+  {id:"FL3",cat:"Flow",level:"Advanced",name:"1-2 → Roll → Cross – Lead Uppercut – Body Hook",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Roll",c:"defense"},{t:"Cross",c:"punch"},{t:"Lead Uppercut",c:"punch"},{t:"Body Hook",c:"punch"}],tip:"The roll sets up the inside work. Classic boxers flow."},
+  {id:"FL4",cat:"Flow",level:"Advanced",name:"1-2-3-2-3 → Body Hook → Pivot → Rear Uppercut – Lead Hook – Cross",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Body Hook",c:"punch"},{t:"Pivot",c:"defense"},{t:"Rear Uppercut",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Cross",c:"punch"}],tip:"Advanced chain. Pivot creates the new angle for the final three."},
+
+  // ===== SOUTHPAW =====
+  {id:"S1",cat:"Southpaw",level:"Intermediate",name:"Jab – Lead Uppercut – Cross",seq:[{t:"Jab",c:"punch"},{t:"Lead Uppercut",c:"punch"},{t:"Cross",c:"punch"}],tip:"Orthodox vs Southpaw: your rear cross is their outside line. Use it."},
+  {id:"S2",cat:"Southpaw",level:"Intermediate",name:"Jab – Hook – Cross – Cross Body – Hook",seq:[{t:"Jab",c:"punch"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"},{t:"Cross Body",c:"punch"},{t:"Hook",c:"punch"}],tip:"High-low combination to confuse a southpaw guard."},
+  {id:"S3",cat:"Southpaw",level:"Advanced",name:"Rear Body Hook – Lead Hook – Rear Hook",seq:[{t:"Rear Body Hook",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Rear Hook",c:"punch"}],tip:"Body first to drop the guard, head shots to close it out."},
+  {id:"S4",cat:"Southpaw",level:"Intermediate",name:"Jab – Rear Hook",seq:[{t:"Jab",c:"punch"},{t:"Rear Hook",c:"punch"}],tip:"Simple but effective against southpaws. The jab creates the angle."},
+  {id:"S5",cat:"Southpaw",level:"Advanced",name:"Jab – Lead Uppercut – Lead Hook",seq:[{t:"Jab",c:"punch"},{t:"Lead Uppercut",c:"punch"},{t:"Lead Hook",c:"punch"}],tip:"Lead hand combination. Get inside their guard and work the uppercut-hook combo."},
+
+  // ===== BEGINNER =====
+  {id:"BG1",cat:"Boxing",level:"Beginner",name:"Jab – Cross – Lead Hook → Slip → Hook",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Slip",c:"defense"},{t:"Hook",c:"punch"}],tip:"First combo with defensive movement built in. Slip the imaginary return."},
+  {id:"BG2",cat:"Boxing",level:"Beginner",name:"1-2 Low → Hook High",seq:[{t:"Jab Low",c:"punch"},{t:"Cross Low",c:"punch"},{t:"Lead Hook High",c:"punch"}],tip:"Change levels. Low punches draw the guard down, hook lands high."},
+  {id:"BG3",cat:"Boxing",level:"Beginner",name:"1-2 High → Body Hook",seq:[{t:"Jab High",c:"punch"},{t:"Cross High",c:"punch"},{t:"Body Hook",c:"punch"}],tip:"Opposite of above. High punches raise the guard, body hook finds the opening."},
+  {id:"BG4",cat:"Boxing",level:"Beginner",name:"Jab – Cross – Lead Hook → Lead & Rear Uppercut",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Lead Uppercut",c:"punch"},{t:"Rear Uppercut",c:"punch"}],tip:"Get inside with the 1-2-3, work the uppercuts in the pocket."},
+  {id:"BG5",cat:"Kickboxing",level:"Beginner",name:"Lead Teep → Jab – Cross → Rear Round Kick x2",seq:[{t:"Lead Teep",c:"kick"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Rear Round Kick",c:"kick"},{t:"Rear Round Kick",c:"kick"}],tip:"Great beginner Muay Thai/kickboxing combo. The double kick keeps them guessing."},
+  {id:"BG6",cat:"Boxing",level:"Beginner",name:"Jab – Cross → Roll Right → Cross | Roll Left → Lead Hook",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Roll Right",c:"defense"},{t:"Cross",c:"punch"},{t:"Roll Left",c:"defense"},{t:"Lead Hook",c:"punch"}],tip:"Teaches rolling with counters. Great for beginners learning head movement."},
+  {id:"BG7",cat:"Muay Thai",level:"Beginner",name:"Jab – Cross – Lead Hook → Rear Elbow → Clinch → 4x Knees",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Rear Elbow",c:"elbow"},{t:"Clinch",c:"other"},{t:"Knee",c:"knee"},{t:"Knee",c:"knee"},{t:"Knee",c:"knee"},{t:"Knee",c:"knee"}],tip:"Full Muay Thai flow from punches to clinch. Entry, control, finish."},
+
+  // ===== INTERMEDIATE =====
+  {id:"IN1",cat:"Boxing",level:"Intermediate",name:"1 → Parry → Block → 1 → 2",seq:[{t:"Jab",c:"punch"},{t:"Parry",c:"defense"},{t:"Block",c:"defense"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"}],tip:"Defensive combo. Parry their jab, block their cross, counter."},
+  {id:"IN2",cat:"Boxing",level:"Intermediate",name:"1-2-1-2 → Slip → 2",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Slip",c:"defense"},{t:"Cross",c:"punch"}],tip:"Build rhythm with the four punches, slip their counter, and finish."},
+  {id:"IN3",cat:"Boxing",level:"Intermediate",name:"1-2-1-2 → Roll → 2",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Roll",c:"defense"},{t:"Cross",c:"punch"}],tip:"Same rhythm, roll instead of slip. Works against hooks."},
+  {id:"IN4",cat:"Boxing",level:"Intermediate",name:"1-2 → Block → Cross – Hook – Body Cross",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Block",c:"defense"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Body Cross",c:"punch"}],tip:"Block their return and immediately counter with the three-piece."},
+  {id:"IN5",cat:"Boxing",level:"Intermediate",name:"1-2-3 → Slip → Body Hook – Head Hook – Cross → Roll → Cross – Hook",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Slip",c:"defense"},{t:"Body Hook",c:"punch"},{t:"Head Hook",c:"punch"},{t:"Cross",c:"punch"},{t:"Roll",c:"defense"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"}],tip:"Full intermediate flow combo. Focus on smooth transitions between offense and defense."},
+
+  // ===== ADVANCED =====
+  {id:"AV1",cat:"Boxing",level:"Advanced",name:"1-2B → Lead Hook → Rear Knee → Rear Elbow",seq:[{t:"Jab",c:"punch"},{t:"Cross Body",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Rear Knee",c:"knee"},{t:"Rear Elbow",c:"elbow"}],tip:"Boxing into Muay Thai. The cross to the body drops their hands for the hook."},
+  {id:"AV2",cat:"Muay Thai",level:"Advanced",name:"1-2-5 → Rear Elbow → Switch Stance → Rear Round Kick",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Uppercut",c:"punch"},{t:"Rear Elbow",c:"elbow"},{t:"Switch Stance",c:"other"},{t:"Rear Round Kick",c:"kick"}],tip:"The switch stance generates massive power on the final kick."},
+  {id:"AV3",cat:"Muay Thai",level:"Advanced",name:"Jab – Cross – Step Right → Rear Uppercut – Lead Hook → Rear Teep",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Step Right",c:"defense"},{t:"Rear Uppercut",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Rear Teep",c:"kick"}],tip:"Step to create the angle, work the inside, reset with the teep."},
+  {id:"AV4",cat:"Muay Thai",level:"Advanced",name:"Jab – Slip → Cross – Hook → Rear Knee – Step Out → Spinning Back Elbow",seq:[{t:"Jab",c:"punch"},{t:"Slip",c:"defense"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Rear Knee",c:"knee"},{t:"Step Out",c:"other"},{t:"Spinning Back Elbow",c:"elbow"}],tip:"The spinning elbow is the surprise finish. Only use when they're not expecting it."},
+  {id:"AV5",cat:"Muay Thai",level:"Advanced",name:"Jab x2 → Lead Teep → Cross – Hook – Step Right → Rear Roundhouse",seq:[{t:"Jab",c:"punch"},{t:"Jab",c:"punch"},{t:"Lead Teep",c:"kick"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Step Right",c:"other"},{t:"Rear Roundhouse",c:"kick"}],tip:"Step creates the outside angle for the roundhouse to land clean."},
+  {id:"AV6",cat:"Muay Thai",level:"Advanced",name:"Jab – Lead Hook → Rear Uppercut → Rear Low Kick → Switch Kick → Jab → Teep Reset",seq:[{t:"Jab",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Rear Uppercut",c:"punch"},{t:"Rear Low Kick",c:"kick"},{t:"Switch Kick",c:"kick"},{t:"Jab",c:"punch"},{t:"Teep",c:"kick"}],tip:"Punish the legs, reset with the teep. Long range combo with a defensive exit."},
+  {id:"AV7",cat:"Muay Thai",level:"Advanced",name:"1-12-123-4 Blast",seq:[{t:"Jab",c:"punch"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Rear Hook",c:"punch"}],tip:"Pure volume blast. All punches, increasing combinations. For the bag only."},
+  {id:"AV8",cat:"Muay Thai",level:"Advanced",name:"123 – Kick – 232 – Kick",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Round Kick",c:"kick"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"},{t:"Round Kick",c:"kick"}],tip:"Punch-kick rhythm combo. Great for padwork with a partner."},
+
+  // ===== CLASS ROUNDS =====
+  {id:"CR1",cat:"Class",level:"Beginner",name:"Jab – Jab – Cross at Different Targets",seq:[{t:"Jab High",c:"punch"},{t:"Jab Low",c:"punch"},{t:"Cross",c:"punch"}],tip:"Change levels with each jab. Great for beginners learning targeting."},
+  {id:"CR2",cat:"Class",level:"Beginner",name:"Jab – Cross – Lead Hook → Rear Body Hook → Lead Hook",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Rear Body Hook",c:"punch"},{t:"Lead Hook",c:"punch"}],tip:"High-body-high. Classic class sequence that teaches level changes."},
+  {id:"CR3",cat:"Class",level:"Beginner",name:"Jab – Cross → Cross – Lead Hook",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"}],tip:"Simple repeat pattern. Good for building rhythm and conditioning."},
+  {id:"CR4",cat:"Class",level:"Intermediate",name:"Jab – Jab – Cross → Side Step → Cross – Lead Hook",seq:[{t:"Jab",c:"punch"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Side Step",c:"defense"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"}],tip:"Introduce footwork into class. Step and throw — don't stop moving."},
+  {id:"CR5",cat:"Class",level:"Intermediate",name:"Jab → Slip → Lead Hook – Cross",seq:[{t:"Jab",c:"punch"},{t:"Slip",c:"defense"},{t:"Lead Hook",c:"punch"},{t:"Cross",c:"punch"}],tip:"Great teaching combo for head movement. Slip your own jab return."},
+  {id:"CR6",cat:"Class",level:"Intermediate",name:"Jab – Cross → Roll Right → Cross | Roll Left → Lead Hook",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Roll Right",c:"defense"},{t:"Cross",c:"punch"},{t:"Roll Left",c:"defense"},{t:"Lead Hook",c:"punch"}],tip:"Full class round with both rolls. Teach both directions in one combo."},
+  {id:"CR7",cat:"Class",level:"Intermediate",name:"Jab – Cross → Roll Right → Cross – Lead Hook | Roll Left → Lead Hook – Cross",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Roll Right",c:"defense"},{t:"Cross",c:"punch"},{t:"Hook",c:"punch"},{t:"Roll Left",c:"defense"},{t:"Hook",c:"punch"},{t:"Cross",c:"punch"}],tip:"Advanced class round. Left and right rolling patterns with counters."},
+  {id:"CR8",cat:"Class",level:"Beginner",name:"Jab – Cross – Lead Hook → Lead & Rear Uppercut",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Lead Uppercut",c:"punch"},{t:"Rear Uppercut",c:"punch"}],tip:"Great for finishing a class round with energy. Uppercuts at the end feel powerful."},
+  {id:"CR9",cat:"Class",level:"Intermediate",name:"Jab – Cross – Lead Hook → Rear Elbow → Clinch → 4x Knees",seq:[{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Lead Hook",c:"punch"},{t:"Rear Elbow",c:"elbow"},{t:"Clinch",c:"other"},{t:"Knee x4",c:"knee"}],tip:"Full Muay Thai round ender. Gets the heart rate up fast."},
+  {id:"CR10",cat:"Class",level:"Beginner",name:"Lead Teep → Jab – Cross → Rear Round Kick x2",seq:[{t:"Lead Teep",c:"kick"},{t:"Jab",c:"punch"},{t:"Cross",c:"punch"},{t:"Rear Round Kick",c:"kick"},{t:"Rear Round Kick",c:"kick"}],tip:"Perfect intro to kicking in class. Simple, effective, and fun on the bag."},
+];
+
+let activeFilters = { cat: 'all', level: 'all' };
+let searchTerm = '';
+let openId = null;
+
+function getStrikeClass(c) {
+  const map = { punch: 's-punch', kick: 's-kick', knee: 's-knee', elbow: 's-elbow', defense: 's-defense', other: 's-other' };
+  return map[c] || 's-other';
+}
+
+function getLevelTag(level) {
+  const map = { Beginner: 'tag-beg', Intermediate: 'tag-int', Advanced: 'tag-adv', Class: 'tag-int' };
+  return `<span class="tag ${map[level] || 'tag-int'}">${level}</span>`;
+}
+
+function buildSequence(seq) {
+  return seq.map((s, i) => {
+    const cls = getStrikeClass(s.c);
+    const arrow = i < seq.length - 1 ? '<span class="arrow">›</span>' : '';
+    return `<span class="strike ${cls}">${s.t}</span>${arrow}`;
+  }).join('');
+}
+
+function filter() {
+  return COMBOS.filter(c => {
+    const catOk = activeFilters.cat === 'all' || c.cat === activeFilters.cat;
+    const levelOk = activeFilters.level === 'all' || c.level === activeFilters.level;
+    const search = searchTerm.toLowerCase();
+    const searchOk = !search || 
+      c.name.toLowerCase().includes(search) ||
+      c.cat.toLowerCase().includes(search) ||
+      c.level.toLowerCase().includes(search) ||
+      c.seq.some(s => s.t.toLowerCase().includes(search)) ||
+      (c.tip && c.tip.toLowerCase().includes(search));
+    return catOk && levelOk && searchOk;
+  });
+}
+
+function render() {
+  const filtered = filter();
+  const list = document.getElementById('combo-list');
+  const countEl = document.getElementById('results-count');
+  countEl.innerHTML = `Showing <strong>${filtered.length}</strong> of ${COMBOS.length} combos`;
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">🥊</div><div class="empty-text">No combos match. Try different filters.</div></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(c => {
+    const isOpen = openId === c.id;
+    return `<div class="combo-card${isOpen ? ' open' : ''}" onclick="toggle('${c.id}')">
+      <div class="combo-header">
+        <div class="combo-num">${c.id}</div>
+        <div class="combo-info">
+          <div class="combo-name">${c.name}</div>
+          <div class="combo-tags">
+            <span class="tag tag-cat">${c.cat}</span>
+            ${getLevelTag(c.level)}
+          </div>
+        </div>
+        <div class="chevron">&#9660;</div>
+      </div>
+      ${isOpen ? `<div class="combo-body">
+        <div class="sequence">${buildSequence(c.seq)}</div>
+        <div class="combo-tip"><span class="tip-label">Coach tip: </span>${c.tip}</div>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function toggle(id) {
+  openId = openId === id ? null : id;
+  render();
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const group = this.dataset.group;
+    const val = this.dataset.val;
+    document.querySelectorAll(`[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    activeFilters[group] = val;
+    openId = null;
+    render();
+  });
+});
+
+document.getElementById('search').addEventListener('input', function() {
+  searchTerm = this.value;
+  openId = null;
+  render();
+});
+
+function randomCombo() {
+  const idx = Math.floor(Math.random() * COMBOS.length);
+  const combo = COMBOS[idx];
+  // Reset filters to show all
+  activeFilters = { cat: 'all', level: 'all' };
+  searchTerm = '';
+  document.getElementById('search').value = '';
+  document.querySelectorAll('[data-group="cat"]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('[data-group="level"]').forEach(b => b.classList.remove('active'));
+  document.querySelector('[data-group="cat"][data-val="all"]').classList.add('active');
+  document.querySelector('[data-group="level"][data-val="all"]').classList.add('active');
+  openId = combo.id;
+  render();
+  // Scroll to the opened combo
+  setTimeout(() => {
+    const el = document.querySelector('.combo-card.open');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('random-highlight');
+      setTimeout(() => el.classList.remove('random-highlight'), 1000);
+    }
+  }, 100);
+}
+
+function initStats() {
+  const total = COMBOS.length;
+  const cats = [...new Set(COMBOS.map(c => c.cat))].length;
+  const adv = COMBOS.filter(c => c.level === 'Advanced').length;
+  document.getElementById('total-count').textContent = total;
+  document.getElementById('cat-count').textContent = cats;
+  document.getElementById('adv-count').textContent = adv;
+
+  // Add count badges to filter buttons
+  document.querySelectorAll('[data-group="cat"]').forEach(btn => {
+    const val = btn.dataset.val;
+    if (val === 'all') {
+      btn.innerHTML = `All <span class="badge-count">${total}</span>`;
+    } else {
+      const count = COMBOS.filter(c => c.cat === val).length;
+      if (count > 0) btn.innerHTML = `${val} <span class="badge-count">${count}</span>`;
+    }
+  });
+  document.querySelectorAll('[data-group="level"]').forEach(btn => {
+    const val = btn.dataset.val;
+    if (val === 'all') {
+      btn.innerHTML = `All Levels <span class="badge-count">${total}</span>`;
+    } else {
+      const count = COMBOS.filter(c => c.level === val).length;
+      if (count > 0) btn.innerHTML = `${val} <span class="badge-count">${count}</span>`;
+    }
+  });
+}
+
+initStats();
+render();
+</script>
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">MMAPOP</div>
+    <div class="footer-links">
+      <a class="footer-link" href="https://mmapop.com" target="_blank">mmapop.com</a>
+      <span class="footer-divider">·</span>
+      <a class="footer-link" href="https://www.instagram.com/sebastianschannel/" target="_blank">@sebastianschannel</a>
+      <span class="footer-divider">·</span>
+      <a class="footer-link" href="https://www.skool.com/mma-pop-vip-4640/about" target="_blank">Join the Community</a>
+    </div>
+    <div class="footer-built">Built by Sebastian Chavez</div>
+    <div class="footer-license">Licensed to MMAPOP Community — not for redistribution</div>
+  </div>
+</footer>
+
+</body>
+</html>
